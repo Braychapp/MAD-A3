@@ -41,11 +41,21 @@ public class DateActivity extends AppCompatActivity {
             }
         });
 
+//        continueButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                // Start the SecondActivity
+//                Intent intent = new Intent(DateActivity.this, SecondActivity.class);
+//                startActivity(intent);
+//            }
+//        });
+
+
         continueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Start the SecondActivity
-                Intent intent = new Intent(DateActivity.this, SecondActivity.class);
+                //starting the weather activity
+                Intent intent = new Intent(WeatherActivity.this, WeatherActivity.class);
                 startActivity(intent);
             }
         });
