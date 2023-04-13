@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+/=====================================================================
+//                      Assignment 2
+//
+//  Name of file:       activity_view_trips.xml
+//
+//  Description:       Provides  a list of all selected trips
+//
+//=====================================================================
+-->
+
+<!-- taken from https://www.geeksforgeeks.org/how-to-read-data-from-sqlite-database-in-android/ -->
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ViewTrips">
+
+    <!--recycler view for displaying our trips-->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/idRVTrips"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</RelativeLayout>

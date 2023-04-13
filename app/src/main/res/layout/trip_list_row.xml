@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/start_location_textview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Start Location: "
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/end_location_textview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="End Location: "
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/date_textview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Date: "
+        android:textSize="16sp" />
+
+</LinearLayout>
