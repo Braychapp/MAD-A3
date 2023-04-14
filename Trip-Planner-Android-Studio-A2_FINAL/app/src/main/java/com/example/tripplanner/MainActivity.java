@@ -16,6 +16,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
+import android.content.Intent;
+import android.content.IntentFilter;
 import org.json.JSONArray;
 import org.json.JSONException;
 import java.io.IOException;
@@ -25,6 +27,10 @@ import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
+    // create new instance of AirplaneModeChangeReceiver - based on this code and adapted
+    // to suit needs https://www.geeksforgeeks.org/broadcast-receiver-in-android-with-example/
+
+    AirplaneModeChangeReceiver airplaneModeChangeReceiver = new AirplaneModeChangeReceiver();
     private RecyclerView recyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
@@ -52,6 +58,24 @@ public class MainActivity extends AppCompatActivity {
         tripsList = new ArrayList<>();
 
         new LoadJsonTask().execute();
+    }
+
+    @Override
+    protected void onStart(){
+        super.onStart();
+
+        // create the intent filter to define what the airplane mode broadcaster
+        // is allowed to receive when the application starts
+
+        IntentFilter filter = new IntentFilter(Intent.ACTION_AIRPLANE_MODE_CHANGED);
+        registerReceiver(airplaneModeChangeReceiver, filter);
+    }
+
+    @Override
+    protected void onStop(){
+        super.onStop();
+        // unregister the receiver when the application stops
+        unregisterReceiver(airplaneModeChangeReceiver);
     }
 
     private class LoadJsonTask extends AsyncTask<Void, Void, String> {
