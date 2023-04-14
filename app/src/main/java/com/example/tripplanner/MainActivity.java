@@ -12,6 +12,9 @@ package com.example.tripplanner;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -33,9 +36,15 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Trip> tripsList;
     private String[] destinations;
 
+    MediaPlayer mediaPlayer;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mediaPlayer = MediaPlayer.create(this, R.raw.music);
+        mediaPlayer.setLooping(true);
+        mediaPlayer.start();
         setContentView(R.layout.activity_main);
 
         Log.i(Global.MTAG, "onCreate: MainActivity started");
@@ -99,6 +108,24 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // Stop the service to stop the music playback
+        stopService(new Intent(this, MusicService.class));
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if (mediaPlayer != null)
+            mediaPlayer.stop();
+        mediaPlayer.release();
+        mediaPlayer = null;
     }
 
 
