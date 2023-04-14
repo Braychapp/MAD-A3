@@ -1,9 +1,10 @@
 package com.example.tripplanner;
 
 import android.content.BroadcastReceiver;
-import android.content.Intent;
 import android.content.Context;
+import android.content.Intent;
 import android.provider.Settings;
+import android.util.Log;
 import android.widget.Toast;
 
 // note - this code is heavily based on this link - https://www.geeksforgeeks.org/broadcast-receiver-in-android-with-example/
@@ -18,6 +19,9 @@ public class AirplaneModeChangeReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent){
+        // log airplane mode change request
+        Log.d("TripPlanner", "Airplane mode status change");
+
         // check to see if the airplane mode is on by calling function below and checking value
         if (airplaneModeOnStatus(context.getApplicationContext())){
             Toast.makeText(context, airplaneModeOn, Toast.LENGTH_LONG).show();
