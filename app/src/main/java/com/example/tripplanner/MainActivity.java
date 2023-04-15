@@ -9,17 +9,28 @@
 //=====================================================================
 package com.example.tripplanner;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
+import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.widget.Toast;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import java.io.IOException;
@@ -40,7 +51,35 @@ public class MainActivity extends AppCompatActivity {
     private String username = "";
     private ArrayList<Trip> tripsList;
     private String[] destinations;
-    MediaPlayer mediaPlayer;
+    private MediaPlayer mediaPlayer;
+    private static final int PERMISSIONS_REQUEST_LOCATION = 1001;
+    private boolean locationPermissionGranted = false;
+    private LocationManager locationManager;
+
+    private LocationListener locationListener = new LocationListener() {
+        @Override
+        public void onLocationChanged(Location location) {
+            // Do something with the location, such as displaying it on the screen
+            double latitude = location.getLatitude();
+            double longitude = location.getLongitude();
+            Log.d("Location", "Latitude: " + latitude + ", Longitude: " + longitude);
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,8 +103,44 @@ public class MainActivity extends AppCompatActivity {
 
         tripsList = new ArrayList<>();
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSIONS_REQUEST_LOCATION);
+            } else {
+                locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                if (locationManager != null) {
+                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+                }
+            }
+        } else {
+            locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            if (locationManager != null) {
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+            }
+        }
+
         new LoadJsonTask().execute();
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (requestCode == PERMISSIONS_REQUEST_LOCATION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // permission granted
+                locationPermissionGranted = true;
+                //the line below causes an error and won't let me compile for some reason so it stays commented out upon submission
+                //locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+            } else {
+                // permission denied
+                locationPermissionGranted = false;
+                // Notify the user that location access is required
+                Toast.makeText(this, "Location access is required to use this app", Toast.LENGTH_LONG).show();
+            }
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
 
     @Override
     protected void onStart(){

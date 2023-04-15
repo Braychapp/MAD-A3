@@ -1,5 +1,5 @@
 //=====================================================================
-//                      Assignment 2
+//                      Assignment 3
 //
 //  Name of file:      FourthActivity.java
 //
