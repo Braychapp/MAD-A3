@@ -27,6 +27,8 @@ public class FourthActivity extends AppCompatActivity {
 
     private Button addTripBtn, readTripBtn;
     private DBHandler dbHandler;
+    private static final int NOTIFICATION_ID = 1;
+    private static final String CHANNEL_ID = "trip_planner_channel";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,32 +59,38 @@ public class FourthActivity extends AppCompatActivity {
 
         addTripBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
                 String tripStart = tripStartTxt.getText().toString();
                 String tripEnd = tripEndTxt.getText().toString();
                 String tripDate = tripDateTxt.getText().toString();
                 String tripMethod = tripMethodTxt.getText().toString();
 
-                //make sure none of the fields are empty
-                if (tripStart.isEmpty() || tripEnd.isEmpty() || tripDate.isEmpty() || tripMethod.isEmpty()){
+                // Make sure none of the fields are empty
+                if (tripStart.isEmpty() || tripEnd.isEmpty() || tripDate.isEmpty() || tripMethod.isEmpty()) {
                     Toast.makeText(FourthActivity.this, "Please make sure no fields are empty", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                //call on method created to add a new trip to the database
+                // Create an intent for the NotificationService
+                Intent serviceIntent = new Intent(FourthActivity.this, NotificationService.class);
+
+                // Start the NotificationService
+                startService(serviceIntent);
+
+                // Call the method created to add a new trip to the database
                 dbHandler.addNewTrip(tripStart, tripEnd, tripDate, tripMethod);
 
-                //display message confirming addition to database
+                // Display message confirming addition to database
                 Toast.makeText(FourthActivity.this, "Trip added!", Toast.LENGTH_SHORT).show();
 
-                //make the fields empty
+                // Make the fields empty
                 tripStartTxt.setText("");
                 tripEndTxt.setText("");
                 tripDateTxt.setText("");
                 tripMethodTxt.setText("");
-
             }
         });
+
 
         readTripBtn.setOnClickListener(new View.OnClickListener() {
             @Override
